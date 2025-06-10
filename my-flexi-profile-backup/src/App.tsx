@@ -15,6 +15,9 @@ import ProfileViewer from "./pages/ProfileViewer";
 import SectionEditorPage from "./pages/SectionEditorPage";
 import HRDashboard from "./pages/hr_dashboard";
 import NotFound from "./pages/NotFound";
+import PostNewJob from "./pages/PostNewJob";
+import Description from "./pages/description";
+
 
 const queryClient = new QueryClient();
 
@@ -63,6 +66,20 @@ const AppRoutes = () => {
           DISABLE_AUTH ? <ProfileViewer /> : <ProtectedRoute><ProfileViewer /></ProtectedRoute>
         }
       />
+
+      <Route
+        path="/post-new-job"
+        element={
+          DISABLE_AUTH ? <PostNewJob /> : <ProtectedRoute><PostNewJob /></ProtectedRoute>
+        }
+      />
+      <Route
+        path="/description"
+        element={
+          DISABLE_AUTH ? <Description /> : <ProtectedRoute><Description /></ProtectedRoute>
+        }
+      />
+
       <Route
         path="/hr_dashboard"
         element={

@@ -4,6 +4,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+
+import { Navigate, useNavigate } from 'react-router-dom';
 import {
   Select,
   SelectContent,
@@ -67,15 +69,15 @@ const mockJobs: Job[] = [
 ];
 
 const StatCard = ({ icon: Icon, title, value, className = "" }: { icon: any, title: string, value: string | number, className?: string }) => (
-  <Card className={`${className} relative overflow-hidden`}>
+  <Card className={`${className} relative overflow-hidden bg-white border-black`}>
     <CardContent className="pt-6">
       <div className="flex items-center gap-4">
         <div className="p-2 rounded-lg bg-primary/10">
           <Icon className="h-6 w-6 text-primary" />
         </div>
         <div>
-          <p className="text-sm text-muted-foreground">{title}</p>
-          <h3 className="text-2xl font-bold">{value}</h3>
+          <p className="text-sm text-black">{title}</p>
+          <h3 className="text-2xl font-bold text-black">{value}</h3>
         </div>
       </div>
     </CardContent>
@@ -83,18 +85,18 @@ const StatCard = ({ icon: Icon, title, value, className = "" }: { icon: any, tit
 );
 
 const JobCard = ({ job }: { job: Job }) => (
-  <Card className="mb-4">
+  <Card className="mb-4 bg-white border-black">
     <CardContent className="pt-6">
       <div className="flex justify-between items-start mb-4">
-        <h3 className="text-xl font-semibold">{job.title}</h3>
+        <h3 className="text-xl font-semibold font-bold text-black">{job.title}</h3>
         <Badge 
           variant={job.status === 'closed' ? 'secondary' : job.status === 'interview' ? 'outline' : 'default'}
-          className="capitalize"
+          className="capitalize text-black bg-white border-black"
         >
           {job.status}
         </Badge>
       </div>
-      <div className="grid gap-2 text-sm text-muted-foreground">
+      <div className="grid gap-2 text-sm text-black">
         <div className="flex items-center gap-2">
           <Briefcase className="h-4 w-4" />
           <span>{job.department}</span>
@@ -110,7 +112,7 @@ const JobCard = ({ job }: { job: Job }) => (
       </div>
       <div className="mt-4 flex flex-wrap gap-2">
         {job.skills.map((skill, index) => (
-          <Badge key={index} variant="outline" className="bg-primary/5">
+          <Badge key={index} variant="outline" className="bg-white text-black border-black">
             {skill}
           </Badge>
         ))}
@@ -120,16 +122,24 @@ const JobCard = ({ job }: { job: Job }) => (
 );
 
 const HRDashboard = () => {
+
+  
+const navigate = useNavigate();
+
+  const handlePostNewJob = () => {
+    navigate('/post-new-job');
+  };
+
   return (
     <Layout>
-      <div className="container mx-auto py-8 px-4">
+      <div className="container mx-auto py-8 px-4 bg-white text-black">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold">HR Dashboard</h1>
-          <Button className="bg-blue-600 hover:bg-blue-700">
-            <Plus className="h-4 w-4 mr-2" />
-            Post New Job
-          </Button>
+         <Button className="bg-blue-600 hover:bg-blue-700" onClick={handlePostNewJob}>
+  <Plus className="h-4 w-4 mr-2" />
+  Post New Job
+</Button>
         </div>
 
         {/* Statistics */}
@@ -160,9 +170,9 @@ const HRDashboard = () => {
         <div>
           <h2 className="text-2xl font-semibold mb-6">Recent Openings</h2>
           <div className="flex flex-col md:flex-row gap-4 mb-6">
-            <Input placeholder="Search jobs..." className="flex-grow" />
+            <Input placeholder="Search jobs..." className="flex-grow bg-white border-black" />
             <Select>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[180px] bg-white border-black">
                 <SelectValue placeholder="Filter by Skills" />
               </SelectTrigger>
               <SelectContent>
@@ -174,7 +184,7 @@ const HRDashboard = () => {
               </SelectContent>
             </Select>
             <Select>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[180px] bg-white border-black">
                 <SelectValue placeholder="Filter by Type" />
               </SelectTrigger>
               <SelectContent>
@@ -185,7 +195,7 @@ const HRDashboard = () => {
               </SelectContent>
             </Select>
             <Select>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[180px] bg-white border-black">
                 <SelectValue placeholder="Filter by Location" />
               </SelectTrigger>
               <SelectContent>
