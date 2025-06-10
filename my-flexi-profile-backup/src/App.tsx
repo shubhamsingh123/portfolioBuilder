@@ -13,6 +13,7 @@ import Dashboard from "./pages/Dashboard";
 import ProfileEditor from "./pages/ProfileEditor";
 import ProfileViewer from "./pages/ProfileViewer";
 import SectionEditorPage from "./pages/SectionEditorPage";
+import HRDashboard from "./pages/hr_dashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -60,6 +61,12 @@ const AppRoutes = () => {
         path="/view"
         element={
           DISABLE_AUTH ? <ProfileViewer /> : <ProtectedRoute><ProfileViewer /></ProtectedRoute>
+        }
+      />
+      <Route
+        path="/hr_dashboard"
+        element={
+          DISABLE_AUTH ? <HRDashboard /> : <ProtectedRoute><HRDashboard /></ProtectedRoute>
         }
       />
       {/* <Route
