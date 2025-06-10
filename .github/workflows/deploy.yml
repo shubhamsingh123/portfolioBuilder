@@ -3,23 +3,25 @@ name: Deploy to Cloud Run
 on:
   push:
     branches: [ main ]
-    paths:
-      - 'my-flexi-profile-backup/**'
 
 env:
   PROJECT_ID: telus-koodo
   SERVICE_NAME: portfolio-builder
   REGION: us-central1
+  WORKING_DIR: my-flexi-profile-backup
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: my-flexi-profile-backup
 
     steps:
       - uses: actions/checkout@v4
+      
+      - name: Verify working directory
+        run: |
+          cd ${{ env.WORKING_DIR }}
+          echo "Current working directory: $(pwd)"
+          ls -la
       
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
@@ -34,12 +36,14 @@ jobs:
           echo "Docker authentication completed"
         
       - name: Build and Push
+        working-directory: ${{ env.WORKING_DIR }}
         run: |
           echo "Building from directory: $(pwd)"
           docker build -t gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }} .
           docker push gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}
           
       - name: Deploy to Cloud Run
+        working-directory: ${{ env.WORKING_DIR }}
         run: |
           gcloud run deploy ${{ env.SERVICE_NAME }} \
             --image gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }} \
@@ -48,6 +52,7 @@ jobs:
             --allow-unauthenticated
 
       - name: Show Service URL
+        working-directory: ${{ env.WORKING_DIR }}
         run: |
           echo "Deployed service URL:"
           gcloud run services describe ${{ env.SERVICE_NAME }} \
