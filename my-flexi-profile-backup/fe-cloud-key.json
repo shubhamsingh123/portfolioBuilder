@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "telus-koodo",
+  "private_key_id": "8c0a0904f20bfe5c9739f911f58435473ae3dbef",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDMNtZrmKDapPgL\n+1wx8HPhO24Dc0uJ/wyGv+FRzYa4V1uJbzbUDFrNjPrl5Ev7OF/QWfsa+8AhIxTZ\nDsp+QIm07Q+baxpkQVYYbk6xBDimhXyO19Ilf+3m4604vAcuhETsfdehQARk+2+3\nbj7wBK2yGFpVlrwf8sRbVKHg4fbjbJKAQyjX04XdhK6XT4q24iueoRyN+RgU4hFv\ntcStTg6NltgKAJOh8hqDJkl0Bd7xOwx8/NcGV8F4F5pP01nklqwIve4IPipFYN5M\nZWoB4UYOB+6GsPw3Ap4m6Ks63FYK8ZOC2y4tTvnaPR8qHxzrwDLYl5Vs8mEESzRN\nWoHpECZzAgMBAAECggEATe2rO1n+IBGN+nyMPR5mChA0tipcLCfg7tbwM9g7TcNA\nUhzXjmm8iO4AnJPXDuH/ZjHAKhbhxYNupDoJuc4E/r7sEsH3S0THhwEpFFHpEFqm\nIphnQBomfdJqOtk94FlnN9v52jXkt2hfxF7Us6EFa43xgvHHjmWE2tlcAMYaAcSx\nIiD+MPVMwkUP04xjVJdsnzy95waI71sHVXUJrHIGs5vVPSxVHLPD9g0VvdXXLw8w\nLql23Zub9R8lB+jUB28AiOZVTQzQgyXGHofVjorfa6jmGEEX6qfoMf82hZG256Yv\nacPNpUtbTN/cI3Ca2VG8DBhHoewZxWJDUWJcH9ZdgQKBgQDu+kf7qM1F1RBHAwtU\ndY+VULh/cLZ76Z5ENqbKgycxOqj+KkScBIvb6KdN3sqfhl9biZzsxy1rF7DABYN3\nLS2zOOMKoeuADg9TVd1lG0eG2QrIj5V7j+s1141IQFIrkv0p6cGpnZKKee66qeYc\nG4USZtNgUDQdQnaWOdRuGCs4wQKBgQDawqaHdU/p3j3ySQRhJ+Cs27/hysgfaPBj\nnB8rcpOqMoFWY3BmXHYifxfK5lvHTjaRFilJ5OWNxzwYE3zf9c9wEOXeqqYtX9dW\nxnEMRv3WhRWyjzo1sdoC9hJYYEapq+nROISQo6qJMJfWh8T7WRWjOa2mQJAU4U6O\nNq21C9HYMwKBgDLi4l8JA6TCCLRGRqxWWBugU5j3ZDQge83koUFwCfFmn0N3tqJO\nKYXLFYz0SssLLtTsCZk1lEtAgSdyRRskaJ3IGDhUYDQlSkgheYIk++cP4kbwpBDq\nhVgyrOfcomKa6wN4vf8jCWgpLJdcxB3qEjzn3kyc52vvkhbM+5nx1YpBAoGAIm85\nX2Er7xg4kAbGVbS9PPhqP9R3o9oU3NkaXvBuJgBFM5/7dWFghxWSXTHdiIXbOQNQ\nBH2vVJ3j67ZFlctPl8hRJred6M6JSvN5oAEcu8O/IphBBWq1cnnhcV/WP6b76x8G\nXu4kTewEOpSsgRQIv+S4XM8U3vSINQKOXU06/tkCgYBTHM9/cnPJJdi/fA1HzpVG\ndEg3qRIjLyhjnWTP24dxO9aOovYPH/0oL9L+FzqWG9TyJE6fm4ILOIgOwdvoRkQi\nX9ykmG2n2NNt83AZ8uphqvIhEhN/Ut8tSp0f43Kg7asfOVBAoPY8N+OUeMLkrAQ5\n0sEW6vpIrSAmI87JWGrphQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "github-actions-deployer@telus-koodo.iam.gserviceaccount.com",
+  "client_id": "103211823602400829637",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/github-actions-deployer%40telus-koodo.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
