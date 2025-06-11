@@ -92,8 +92,14 @@ const AppRoutes = () => {
           DISABLE_AUTH ? <SectionEditorPage /> : <ProtectedRoute><SectionEditorPage /></ProtectedRoute>
         }
       /> */}
-      <Route
+<Route
   path="/section/:sectionId"
+  element={
+    DISABLE_AUTH ? <SectionEditorPage /> : <ProtectedRoute><SectionEditorPage /></ProtectedRoute>
+  }
+/>
+<Route
+  path="/section/:sectionId/subsection/:subsectionId"
   element={
     DISABLE_AUTH ? <SectionEditorPage /> : <ProtectedRoute><SectionEditorPage /></ProtectedRoute>
   }

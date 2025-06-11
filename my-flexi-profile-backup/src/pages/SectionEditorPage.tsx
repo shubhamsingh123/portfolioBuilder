@@ -32,12 +32,26 @@
 
 // export default SectionEditorPage;
 
-// src/pages/SectionEditorPage.tsx
 import React from 'react';
-import SectionEditor from '@/components/SectionEditor';
+import { useParams, Navigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { useProfile } from '@/contexts/ProfileContext';
 import Layout from '@/components/Layout';
+import SectionEditor from '@/components/SectionEditor';
 
 const SectionEditorPage: React.FC = () => {
+  const { sectionId, subsectionId } = useParams<{ sectionId: string; subsectionId: string }>();
+  const { user } = useAuth();
+  const { profile } = useProfile();
+
+  if (!user || !profile) {
+    return <Navigate to="/login" />;
+  }
+
+  if (!sectionId) {
+    return <Navigate to="/dashboard" />;
+  }
+
   return (
     <Layout>
       <div className="container py-8">

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API_BASE_URL } from '../constants/api';
-import { getToken } from './AuthService';
+import { getAccessToken, setAccessToken, getRefreshToken, setRefreshToken, removeTokens, isTokenExpired } from '../utils/tokenHelper';
 
 // Maximum number of retries for failed requests
 const MAX_RETRIES = 3;
@@ -16,11 +16,33 @@ const axiosInstance = axios.create({
 
 // Add a request interceptor
 axiosInstance.interceptors.request.use(
-  (config) => {
-    const token = getToken();
-    if (token) {
+  async (config) => {
+    const token = getAccessToken();
+    if (token && !isTokenExpired(token)) {
       config.headers.Authorization = `Bearer ${token}`;
-      console.log('Token sent with request:', token);
+      console.log('Valid token sent with request');
+    } else if (token && isTokenExpired(token)) {
+      console.log('Token expired, attempting refresh');
+      const refreshToken = getRefreshToken();
+      if (refreshToken) {
+        try {
+          const response = await axios.post(`${API_BASE_URL}/auth/refresh`, { refreshToken });
+          const newAccessToken = response.data.accessToken;
+          setAccessToken(newAccessToken);
+          config.headers.Authorization = `Bearer ${newAccessToken}`;
+          console.log('Token refreshed and sent with request');
+        } catch (error) {
+          console.error('Failed to refresh token:', error);
+          removeTokens();
+          window.location.href = '/login';
+          return Promise.reject('Session expired. Please login again.');
+        }
+      } else {
+        console.log('No refresh token available, redirecting to login');
+        removeTokens();
+        window.location.href = '/login';
+        return Promise.reject('Session expired. Please login again.');
+      }
     } else {
       console.log('No token available for request');
     }
@@ -65,10 +87,7 @@ axiosInstance.interceptors.response.use(
       switch (status) {
         case 401:
           // Clear auth state and redirect to login
-          sessionStorage.removeItem("accessToken");
-          sessionStorage.removeItem("refreshToken");
-          sessionStorage.removeItem("authenticatedUser");
-          sessionStorage.removeItem("user");
+          removeTokens();
           window.location.href = '/login';
           return Promise.reject(new Error('Session expired. Please login again.'));
 

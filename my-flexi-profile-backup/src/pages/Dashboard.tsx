@@ -526,13 +526,11 @@ const Dashboard = () => {
 
   return (
     <Layout>
-      <Background3D />
-
-      <div className="container py-8 relative z-10">
+      <div className="container py-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Welcome, {user.name}!</h1>
-            <p className="text-muted-foreground mb-4">Manage your professional profile</p>
+            <h1 className="text-3xl font-bold mb-2 text-black">Welcome, {user.name}!</h1>
+            <p className="text-black mb-4">Manage your professional profile</p>
 
             <div className="flex items-center gap-4 mb-2">
               <Label htmlFor="public-profile" className="text-sm font-medium flex items-center gap-2">
@@ -568,14 +566,14 @@ const Dashboard = () => {
             <Button
               variant="outline"
               onClick={() => navigate('/profile')}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 bg-black text-white hover:bg-white hover:text-black border border-black"
             >
               <Edit size={16} />
               Edit Profile
             </Button>
             <Button
               onClick={() => navigate('/view')}
-              className="flex items-center gap-2"
+                                className="flex items-center gap-2 bg-black text-white hover:bg-white hover:text-black border border-black"
             >
               <Eye size={16} />
               View Profile
@@ -638,7 +636,7 @@ const Dashboard = () => {
                                 variant="outline"
                                 size="sm"
                                 onClick={() => navigate(`/section/${section.id}`)}
-                                className="flex items-center gap-2"
+                                className="flex items-center gap-2 bg-blue-600 text-white hover:bg-blue-700"
                               >
                                 <Edit size={16} />
                                 Edit Content
@@ -666,7 +664,7 @@ const Dashboard = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="w-full flex items-center gap-2"
+                          className="w-full flex items-center gap-2 bg-black text-white hover:bg-white hover:text-black border border-black"
                           onClick={() => handleAddSection(type)}
                           disabled={isAddingSectionLoading}
                         >

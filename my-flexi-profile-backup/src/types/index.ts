@@ -25,6 +25,7 @@ export interface SubSection {
   imageUrl?: string;
   subtitle?: string;
   level?: number;
+  displayOrder?: number;
 }
 
 export interface Section {

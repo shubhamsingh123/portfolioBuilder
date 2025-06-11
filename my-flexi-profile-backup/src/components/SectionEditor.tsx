@@ -489,20 +489,22 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useProfile } from '@/contexts/ProfileContext';
 import { useToast } from '@/components/ui/use-toast';
+import { Section, SubSection } from '@/types';
+import axios from 'axios';
 
 interface SectionEditorProps {}
 
 const SectionEditor: React.FC<SectionEditorProps> = () => {
   const { sectionId, subsectionId } = useParams<{ sectionId: string; subsectionId?: string }>();
   const navigate = useNavigate();
-  const { profile, updateSubsection } = useProfile();
+  const { profile, updateSection, updateSubsection } = useProfile();
   const { toast } = useToast();
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // Find subsection data when component mounts or params change
   useEffect(() => {
     if (!profile || !sectionId) return;
 
@@ -513,57 +515,100 @@ const SectionEditor: React.FC<SectionEditorProps> = () => {
         description: 'Section not found',
         variant: 'destructive',
       });
-      navigate('/dashboard'); // fallback redirect
+      navigate('/dashboard');
       return;
     }
 
-    if (!subsectionId) {
-      // No subsection selected, maybe a new one or error
-      setTitle('');
-      setContent('');
-      return;
+    if (subsectionId) {
+      const subsection = section.subsections?.find(sub => sub.id === Number(subsectionId));
+      if (!subsection) {
+        toast({
+          title: 'Error',
+          description: 'Subsection not found',
+          variant: 'destructive',
+        });
+        navigate(`/section/${sectionId}`);
+        return;
+      }
+      setTitle(subsection.title);
+      setContent(subsection.content);
+    } else {
+      setTitle(section.title);
+      setContent(section.subsections[0]?.content || '');
     }
-
-    const subsection = section.subsections?.find(sub => sub.id === Number(subsectionId));
-    if (!subsection) {
-      toast({
-        title: 'Error',
-        description: 'Subsection not found',
-        variant: 'destructive',
-      });
-      navigate('/dashboard'); // fallback redirect
-      return;
-    }
-
-    setTitle(subsection.title);
-    setContent(subsection.content);
   }, [profile, sectionId, subsectionId, toast, navigate]);
 
-  const handleSave = async () => {
-    if (!sectionId || !subsectionId) return;
+const handleSave = async () => {
+  if (!sectionId) {
+    setError('Invalid section ID');
+    return;
+  }
 
-    setIsSaving(true);
-    try {
-      await updateSubsection(Number(sectionId), Number(subsectionId), { title, content });
+  if (!content.trim()) {
+    setError('Content is required');
+    return;
+  }
+
+  setIsSaving(true);
+  setError(null);
+  try {
+    const numSectionId = Number(sectionId);
+
+    if (subsectionId) {
+      const numSubsectionId = Number(subsectionId);
+      const subsectionData: Partial<SubSection> = {
+        id: numSubsectionId,
+        content: content.trim()
+      };
+      await updateSubsection(numSectionId, numSubsectionId, subsectionData);
+    } else {
+      const sectionData: Partial<Section> = {
+        subsections: [{
+          id: null,
+          title: 'Main Content',
+          content: content.trim()
+        }]
+      };
+      await updateSection(numSectionId, sectionData);
+    }
+    
+    toast({
+      title: 'Success',
+      description: 'Changes saved successfully!',
+    });
+    navigate('/dashboard');
+  } catch (error) {
+    console.error('Error saving:', error);
+    let errorMessage = 'An unknown error occurred';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else if (axios.isAxiosError(error) && error.response) {
+      errorMessage = `Server error: ${error.response.status} - ${error.response.data.message || error.message}`;
+    }
+    setError(errorMessage);
+    toast({
+      title: 'Error',
+      description: `Failed to update: ${errorMessage}`,
+      variant: 'destructive',
+    });
+    if (errorMessage.includes('Access token not found') || errorMessage.includes('401')) {
       toast({
-        title: 'Success',
-        description: 'Subsection updated successfully!',
-      });
-      navigate(`/section/${sectionId}`); // go back to section page after save
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to update subsection.',
+        title: 'Authentication Error',
+        description: 'Your session may have expired. Please log in again.',
         variant: 'destructive',
       });
-    } finally {
-      setIsSaving(false);
+      navigate('/login');
     }
-  };
+  } finally {
+    setIsSaving(false);
+  }
+};
 
   return (
     <div className="max-w-3xl mx-auto p-4">
-      <h2 className="text-2xl font-semibold mb-4">Edit Subsection</h2>
+      <h2 className="text-2xl font-semibold mb-4">
+        {subsectionId ? 'Edit Subsection' : 'Edit Section'}
+      </h2>
       <form
         onSubmit={e => {
           e.preventDefault();
@@ -573,15 +618,14 @@ const SectionEditor: React.FC<SectionEditorProps> = () => {
       >
         <div>
           <label htmlFor="title" className="block mb-1 font-medium">
-            Title
+            Section Type
           </label>
           <input
             id="title"
             type="text"
             value={title}
-            onChange={e => setTitle(e.target.value)}
-            className="w-full border border-gray-300 rounded px-3 py-2"
-            required
+            readOnly
+            className="w-full border border-gray-300 rounded px-3 py-2 bg-gray-100 cursor-not-allowed"
           />
         </div>
 
@@ -593,13 +637,20 @@ const SectionEditor: React.FC<SectionEditorProps> = () => {
             id="content"
             value={content}
             onChange={e => setContent(e.target.value)}
-            rows={6}
-            className="w-full border border-gray-300 rounded px-3 py-2"
+            rows={8}
+            className="w-full border border-gray-300 rounded px-3 py-2 focus:border-blue-500 focus:ring focus:ring-blue-200"
             required
           />
         </div>
 
-        <div>
+        <div className="flex justify-between">
+          <button
+            type="button"
+            onClick={() => navigate(`/section/${sectionId}`)}
+            className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+          >
+            Cancel
+          </button>
           <button
             type="submit"
             disabled={isSaving}
@@ -608,6 +659,11 @@ const SectionEditor: React.FC<SectionEditorProps> = () => {
             {isSaving ? 'Saving...' : 'Save'}
           </button>
         </div>
+        {error && (
+          <div className="mt-4 p-2 bg-red-100 border border-red-400 text-red-700 rounded">
+            {error}
+          </div>
+        )}
       </form>
     </div>
   );
