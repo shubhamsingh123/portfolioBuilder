@@ -21,7 +21,8 @@ const Login = () => {
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      const from = location.state?.from?.pathname || '/dashboard';
+      const user = JSON.parse(sessionStorage.getItem("user") || "{}");
+      const from = location.state?.from?.pathname || (user.role === 'role:HR' ? '/hr_dashboard' : '/dashboard');
       navigate(from, { replace: true });
     }
   }, [isAuthenticated, navigate, location]);
@@ -56,8 +57,12 @@ const Login = () => {
         // Clear form
         setEmail('');
         setPassword('');
-        // Immediate navigation after successful login
-        navigate('/dashboard', { replace: true });
+        // Get user data and print it
+        const user = JSON.parse(sessionStorage.getItem("user") || "{}");
+        console.log('User data after login:', user);
+        // Immediate navigation based on user role
+        const redirectPath = user.role === 'role:HR' ? '/hr_dashboard' : '/dashboard';
+        navigate(redirectPath, { replace: true });
       } else {
         throw new Error('Authentication failed');
       }

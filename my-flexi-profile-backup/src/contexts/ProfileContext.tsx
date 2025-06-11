@@ -4,6 +4,7 @@ import { Profile, Section, SubSection, SectionType } from '@/types';
 import { useAuth } from './AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { getAccessToken } from '../utils/tokenHelper';
+import axios from 'axios';
 
 interface ProfileContextType {
   profile: Profile | null;
@@ -33,7 +34,7 @@ export const useProfile = () => {
 // Fetch profile by user ID from backend
 import { API_ENDPOINTS } from '../constants/api';
 import axiosInstance from '../services/axiosConfig';
-import { SectionDTO } from '../types/dto/SectionDTO';
+import { SectionDTO, SubSectionDTO } from '../types/dto/SectionDTO';
 import { SectionService } from '../services/SectionService';
 import { getToken } from '../services/AuthService';
 
@@ -353,29 +354,63 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
    // adjust path as needed
 
-const updateSection = async (sectionId: number, updatedSection: Section): Promise<void> => {
+const updateSection = async (sectionId: number, updatedSection: Partial<Section>): Promise<void> => {
   try {
-    const accessToken = getAccessToken();
-    if (!accessToken) throw new Error('Access token not found');
-
-    const response = await fetch(`http://localhost:8080/api/sections/${sectionId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify(updatedSection),
-    });
-
-    if (!response.ok) {
-      const errorBody = await response.text();
-      console.error('Server error response:', errorBody);
-      throw new Error(`Failed to update section: ${response.status}`);
+    console.log('Updating section:', { sectionId, updatedSection });
+    
+    if (!profile) {
+      throw new Error('Profile not loaded');
     }
 
-    // Optional: Update local state
+    const currentSection = profile.sections.find(s => s.id === sectionId);
+    if (!currentSection) {
+      throw new Error('Section not found');
+    }
+
+    const updatedSectionDTO: SectionDTO = {
+      id: sectionId,
+      title: updatedSection.title || currentSection.title,
+      content: updatedSection.subsections?.[0]?.content || currentSection.subsections[0]?.content || '',
+      profileId: profile.id!,
+      orderIndex: currentSection.order,
+      type: updatedSection.type || currentSection.type,
+      subSections: currentSection.subsections.map((sub, index) => ({
+        id: sub.id!,
+        title: sub.title,
+        content: index === 0 ? (updatedSection.subsections?.[0]?.content || sub.content) : sub.content,
+        displayOrder: index
+      }))
+    };
+
+    const response = await axiosInstance.put(`${API_ENDPOINTS.SECTIONS}/${sectionId}`, updatedSectionDTO);
+
+    const updatedSectionResponse = response.data;
+
+    // Update local state
+    const updatedSections = profile.sections.map(section =>
+      section.id === sectionId
+        ? {
+            ...section,
+            title: updatedSectionResponse.title,
+            type: updatedSectionResponse.type as SectionType,
+            order: updatedSectionResponse.orderIndex,
+            subsections: updatedSectionResponse.subSections.map(sub => ({
+              id: sub.id,
+              title: sub.title,
+              content: sub.content,
+            }))
+          }
+        : section
+    );
+
+    await saveProfile({ ...profile, sections: updatedSections });
+    console.log('Section updated successfully');
   } catch (error) {
     console.error('Error updating section:', error);
+    if (axios.isAxiosError(error) && error.response) {
+      console.error('Server error response:', error.response.data);
+      throw new Error(`Failed to update section: ${error.response.status}`);
+    }
     throw error;
   }
 };
@@ -420,18 +455,63 @@ const updateSection = async (sectionId: number, updatedSection: Section): Promis
 
   const updateSubsection = async (sectionId: number, subsectionId: number, data: Partial<SubSection>) => {
     try {
-      const updatedSections = profile.sections.map(section => {
-        if (section.id === sectionId) {
-          const updatedSubsections = section.subsections.map(sub =>
-            sub.id === subsectionId ? { ...sub, ...data } : sub
+      console.log('updateSubsection called with:', { sectionId, subsectionId, data });
+      
+      if (!profile) {
+        throw new Error('Profile not loaded');
+      }
+
+      if (!sectionId || !subsectionId) {
+        throw new Error('Invalid section or subsection ID');
+      }
+
+      const section = profile.sections.find(s => s.id === sectionId);
+      console.log('Found section:', section);
+      
+      if (!section) {
+        throw new Error(`Section with ID ${sectionId} not found`);
+      }
+      
+      const subsectionIndex = section.subsections.findIndex(sub => sub.id === subsectionId);
+      console.log('Found subsection at index:', subsectionIndex);
+      
+      if (subsectionIndex === -1) {
+        throw new Error(`Subsection with ID ${subsectionId} not found in section ${sectionId}`);
+      }
+
+      const currentSubsection = section.subsections[subsectionIndex];
+      console.log('Current subsection:', currentSubsection);
+
+      const subsectionDTO: SubSectionDTO = {
+        id: subsectionId,
+        title: data.title || currentSubsection.title,
+        content: data.content || currentSubsection.content,
+        displayOrder: subsectionIndex
+      };
+      
+      console.log('Sending subsectionDTO to service:', subsectionDTO);
+      const updatedSubsection = await SectionService.updateSubSection(sectionId, subsectionId, subsectionDTO);
+      console.log('Received updated subsection:', updatedSubsection);
+
+      const updatedSections = profile.sections.map(s => {
+        if (s.id === sectionId) {
+          const updatedSubsections = s.subsections.map(sub =>
+            sub.id === subsectionId ? { ...sub, ...updatedSubsection } : sub
           );
-          return { ...section, subsections: updatedSubsections };
+          return { ...s, subsections: updatedSubsections };
         }
-        return section;
+        return s;
       });
+
+      console.log('Saving updated profile with new sections:', updatedSections);
       await saveProfile({ ...profile, sections: updatedSections });
+      console.log('Profile saved successfully');
     } catch (error) {
       console.error('Failed to update subsection:', error);
+      if (error.response) {
+        console.error('Error response:', error.response.data);
+        console.error('Error status:', error.response.status);
+      }
       throw error;
     }
   };

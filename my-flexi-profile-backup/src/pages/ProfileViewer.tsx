@@ -67,13 +67,14 @@ const ProfileViewer = () => {
   if (!mounted) return null;
 
   // Function to render a section with its background
-  const renderSection = (section, children) => {
+  const renderSection = (section, children, key) => {
     if (!section) return children;
     
     // Apply background if available
     if (section.backgroundUrl) {
       return (
         <div 
+          key={key}
           className="relative mb-8"
           style={{
             backgroundImage: `url(${section.backgroundUrl})`,
@@ -90,8 +91,8 @@ const ProfileViewer = () => {
       );
     }
     
-    // Return children as is if no styling needed
-    return <div className="mb-8">{children}</div>;
+    // Return children with key prop
+    return <div key={key} className="mb-8">{children}</div>;
   };
   
   return (
@@ -111,33 +112,39 @@ const ProfileViewer = () => {
       {/* About Section */}
       {aboutSection && renderSection(
         aboutSection,
-        <AboutSection profile={profile} />
+        <AboutSection profile={profile} />,
+        'about-section'
       )}
       
       {/* Display specific sections with enhanced components */}
       {careerSection && renderSection(
         careerSection,
-        <TimelineSection section={careerSection} />
+        <TimelineSection section={careerSection} />,
+        'career-section'
       )}
       
       {educationSection && renderSection(
         educationSection,
-        <TimelineSection section={educationSection} />
+        <TimelineSection section={educationSection} />,
+        'education-section'
       )}
       
       {certificationsSection && renderSection(
         certificationsSection,
-        <TimelineSection section={certificationsSection} />
+        <TimelineSection section={certificationsSection} />,
+        'certifications-section'
       )}
       
       {skillsSection && renderSection(
         skillsSection,
-        <SkillsSection section={skillsSection} />
+        <SkillsSection section={skillsSection} />,
+        'skills-section'
       )}
       
       {portfolioSection && renderSection(
         portfolioSection,
-        <ProjectSection section={portfolioSection} />
+        <ProjectSection section={portfolioSection} />,
+        'portfolio-section'
       )}
       
       {/* Display other sections */}
@@ -146,18 +153,21 @@ const ProfileViewer = () => {
         if (sectionType === 'skills') {
           return renderSection(
             section,
-            <SkillsSection key={section.id} section={section} />
+            <SkillsSection key={section.id} section={section} />,
+            `other-section-${section.id}`
           );
         }
         if (sectionType === 'portfolio') {
           return renderSection(
             section,
-            <ProjectSection key={section.id} section={section} />
+            <ProjectSection key={section.id} section={section} />,
+            `other-section-${section.id}`
           );
         }
         return renderSection(
           section,
-          <TimelineSection key={section.id} section={section} />
+          <TimelineSection key={section.id} section={section} />,
+          `other-section-${section.id}`
         );
       })}
       

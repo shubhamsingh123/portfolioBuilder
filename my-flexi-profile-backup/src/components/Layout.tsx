@@ -29,14 +29,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   }, [scrolled]);
   
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
-      <header 
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-          scrolled 
-            ? "bg-background/90 backdrop-blur-md shadow-md border-b border-border/50" 
-            : "bg-transparent"
-        }`}
-      >
+<div className="min-h-screen flex flex-col bg-white text-black">
+<header 
+  className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+    scrolled 
+      ? "bg-black/90 backdrop-blur-md shadow-md border-b border-gray-200" 
+      : "bg-black"
+  }`}
+>
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <Link to="/" className="text-2xl font-bold text-primary">
             ProfileBuilder
@@ -179,7 +179,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {children}
       </main>
       
-      <footer className="bg-muted/50 backdrop-blur-md py-6 border-t border-primary/10">
+<footer className="bg-black py-6 border-t border-gray-200">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-6 md:mb-0">

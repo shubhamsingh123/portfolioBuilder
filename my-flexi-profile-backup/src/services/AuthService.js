@@ -59,6 +59,16 @@ export const loginAPICall = async (email, password) => {
     if (response.data.accessToken) {
       storeToken(response.data.accessToken, response.data.refreshToken);
       console.log('Tokens stored successfully');
+      
+      // Add role:HR to user data
+      if (response.data.user) {
+        response.data.user.role = 'role:HR';
+      } else {
+        response.data.user = { role: 'role:HR' };
+      }
+      
+      // Save the updated user data
+      saveLoggedInUser(response.data.user);
     } else {
       console.warn('No access token received in login response');
     }
@@ -98,7 +108,9 @@ export const getRefreshToken = () => sessionStorage.getItem("refreshToken");
 
 export const saveLoggedInUser = (user) => {
     sessionStorage.setItem("authenticatedUser", "true");
-    sessionStorage.setItem("user", JSON.stringify(user));
+    // Ensure the role is set before saving
+    const userWithRole = { ...user, role: user.role || 'role:HR' };
+    sessionStorage.setItem("user", JSON.stringify(userWithRole));
 };
 
 export const isUserLoggedIn = () => {
