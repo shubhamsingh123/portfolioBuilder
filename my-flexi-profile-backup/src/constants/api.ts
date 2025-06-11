@@ -1,5 +1,5 @@
 // Backend URL
-export const API_BASE_URL = 'http://34.55.116.90:8000';
+export const API_BASE_URL = 'https://portfolio-builder-dev-480868035316.us-central1.run.app';
 
 // API endpoints
 export const API_ENDPOINTS = {
