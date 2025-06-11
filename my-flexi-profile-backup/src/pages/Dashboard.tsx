@@ -601,9 +601,9 @@ const Dashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <Card className="md:col-span-2 elegant-card">
+          <Card className="md:col-span-2 bg-white text-black border-black border">
             <CardHeader className="pb-3">
-              <CardTitle className="text-xl flex items-center gap-2">
+              <CardTitle className="text-xl flex items-center gap-2 text-black">
                 <LayoutDashboard className="h-5 w-5" />
                 Profile Sections
               </CardTitle>
@@ -683,9 +683,9 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="elegant-card">
+          <Card className="bg-white text-black border-black border">
             <CardHeader className="pb-3">
-              <CardTitle className="text-xl flex items-center gap-2">
+              <CardTitle className="text-xl flex items-center gap-2 text-black">
                 <User className="h-5 w-5" />
                 Profile Progress
               </CardTitle>
