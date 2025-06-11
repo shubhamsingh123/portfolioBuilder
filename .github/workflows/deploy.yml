@@ -27,7 +27,7 @@ jobs:
 
     - name: Copy Build Files
       run: |
-        cp -r client/build ./build
+        cp -r my-flexi-profile-backup/build ./build
 
     - name: Authenticate with GCP
       uses: google-github-actions/auth@v1
