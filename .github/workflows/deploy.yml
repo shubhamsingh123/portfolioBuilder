@@ -25,6 +25,12 @@ jobs:
       run: npm run build
       working-directory: my-flexi-profile-backup
 
+    - name: List folders
+      run: |
+        ls -la
+        ls -la my-flexi-profile-backup
+        ls -la my-flexi-profile-backup/build || echo "Build folder missing"
+
     - name: Copy Build Files
       run: |
         mkdir build
