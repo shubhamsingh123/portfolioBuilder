@@ -1,4 +1,4 @@
-name: Deploy React App to Cloud Run
+name: Deploy React to Cloud Run
 
 on:
   push:
@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Repo
+    - name: Checkout Code
       uses: actions/checkout@v3
 
     - name: Set up Node.js
@@ -25,18 +25,7 @@ jobs:
       run: npm run build
       working-directory: my-flexi-profile-backup
 
-    - name: List folders
-      run: |
-        ls -la
-        ls -la my-flexi-profile-backup
-        ls -la my-flexi-profile-backup/build || echo "Build folder missing"
-
-    - name: Copy Build Files
-      run: |
-        mkdir build
-        cp -r my-flexi-profile-backup/build/* build/
-
-    - name: Authenticate with GCP
+    - name: Authenticate with Google Cloud
       uses: google-github-actions/auth@v1
       with:
         credentials_json: '${{ secrets.GCP_SA_KEY }}'
@@ -47,6 +36,7 @@ jobs:
     - name: Build Docker Image
       run: |
         docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/react-app-repo/react-app:$GITHUB_SHA .
+      working-directory: my-flexi-profile-backup
 
     - name: Push Docker Image
       run: |
