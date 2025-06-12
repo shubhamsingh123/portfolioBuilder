@@ -25,8 +25,8 @@ const Description: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white text-black">
-      <div className="flex justify-between items-center p-4 border-b">
+    <div className="min-h-screen bg-gray-100 text-black">
+      <div className="flex justify-between items-center p-4 bg-white border-b border-gray-200 shadow-sm fixed top-0 left-0 right-0 z-10">
         <div className="flex items-center gap-2">
           <img src="/favicon.ico" alt="HR Dashboard" className="w-8 h-8" />
           <h1 className="text-xl font-semibold">HR Dashboard</h1>
@@ -40,10 +40,10 @@ const Description: React.FC = () => {
         </Button>
       </div>
 
-      <div className="container mx-auto p-8">
+      <div className="container mx-auto p-8 mt-16">
         <h2 className="text-3xl font-bold text-gray-800 mb-8">Post New Job</h2>
         
-        <div className="bg-white rounded-lg shadow-lg p-6 max-w-2xl mx-auto border-black border">
+        <div className="bg-white rounded-lg shadow-md p-6 max-w-2xl mx-auto border-0">
           <h3 className="text-xl font-semibold mb-6">Skills & Description</h3>
           
           <div className="space-y-6">
@@ -53,7 +53,7 @@ const Description: React.FC = () => {
                 {selectedSkills.map((skill, index) => (
                   <Badge 
                     key={index} 
-                    className="bg-white text-black border-black flex items-center gap-1"
+                    className="bg-blue-100 text-blue-800 border-0 flex items-center gap-1"
                   >
                     {skill}
                     <button 
@@ -68,7 +68,7 @@ const Description: React.FC = () => {
               <Input 
                 type="text"
                 placeholder="Click to see popular skills"
-                className="w-full bg-white border-black"
+                className="w-full bg-white border-gray-200 shadow-sm"
               />
               <p className="text-sm text-gray-500 mt-1">Press Enter to add a skill</p>
             </div>
@@ -77,7 +77,7 @@ const Description: React.FC = () => {
               <label className="block text-sm font-medium mb-2">Job Description</label>
               <Textarea 
                 placeholder="Enter job description"
-                className="w-full bg-white border-black min-h-[200px]"
+                className="w-full bg-white border-gray-200 shadow-sm min-h-[200px]"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />

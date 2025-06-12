@@ -16,8 +16,8 @@ const PostNewJob: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white text-black">
-      <div className="flex justify-between items-center p-4 border-b">
+    <div className="min-h-screen bg-gray-100 text-black">
+      <div className="flex justify-between items-center p-4 bg-white border-b border-gray-200 shadow-sm fixed top-0 left-0 right-0 z-10">
         <div className="flex items-center gap-2">
           <img src="/favicon.ico" alt="HR Dashboard" className="w-8 h-8" />
           <h1 className="text-xl font-semibold">HR Dashboard</h1>
@@ -31,10 +31,10 @@ const PostNewJob: React.FC = () => {
         </Button>
       </div>
 
-      <div className="container mx-auto p-8">
+      <div className="container mx-auto p-8 mt-16">
         <h2 className="text-3xl font-bold mb-8">Post New Job</h2>
         
-        <div className="rounded-lg shadow-lg p-6 max-w-2xl mx-auto">
+        <div className="rounded-lg shadow-md p-6 max-w-2xl mx-auto bg-white">
           <h3 className="text-xl font-semibold mb-6">Basic Information</h3>
           
           <div className="space-y-6">
@@ -43,14 +43,14 @@ const PostNewJob: React.FC = () => {
               <Input 
                 type="text"
                 placeholder="Software Engineer"
-                className="w-full bg-white border-black"
+                className="w-full bg-white border-gray-200 shadow-sm"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium mb-2">Department</label>
               <Select>
-                <SelectTrigger className="w-full bg-white border-black">
+                <SelectTrigger className="w-full bg-white border-gray-200 shadow-sm">
                   <SelectValue placeholder="Select Department" />
                 </SelectTrigger>
                 <SelectContent>
@@ -67,14 +67,14 @@ const PostNewJob: React.FC = () => {
               <Input 
                 type="text"
                 placeholder="Noida"
-                className="w-full bg-white border-black"
+                className="w-full bg-white border-gray-200 shadow-sm"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium mb-2">Job Type</label>
               <Select>
-                <SelectTrigger className="w-full bg-white border-black">
+                <SelectTrigger className="w-full bg-white border-gray-200 shadow-sm">
                   <SelectValue placeholder="Select Job Type" />
                 </SelectTrigger>
                 <SelectContent>
